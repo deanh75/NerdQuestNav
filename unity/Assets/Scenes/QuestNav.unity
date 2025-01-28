@@ -2207,12 +2207,6 @@ GameObject:
   m_Component:
   - component: {fileID: 948905722}
   - component: {fileID: 948905721}
-  - component: {fileID: 948905723}
-  - component: {fileID: 948905724}
-  - component: {fileID: 948905728}
-  - component: {fileID: 948905727}
-  - component: {fileID: 948905726}
-  - component: {fileID: 948905725}
   m_Layer: 0
   m_Name: Screen Capture Texture Manager
   m_TagString: Untagged
@@ -2234,6 +2228,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startScreenCaptureOnStart: 1
   flipTextureOnGPU: 1
+  _tagSize: 0.05
+  _tagMaterial: {fileID: 0}
+  _decimation: 4
   textureSize: {x: 1024, y: 1024}
   onTextureInitialized:
     m_PersistentCalls:
@@ -2297,7 +2294,19 @@ MonoBehaviour:
         m_CallState: 2
   onNewFrame:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!4 &948905722
 Transform:
   m_ObjectHideFlags: 0
@@ -2313,91 +2322,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 459033191}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &948905723
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 948905720}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f283cfb744e994c408c35780a315266e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &948905724
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 948905720}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 729496b5d2fb4a14789c9a3bed76c1be, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  barcodeReader: {fileID: 948905723}
-  horizontalFieldOfViewDegrees: 82
---- !u!114 &948905725
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 948905720}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 71a155ece80369d4e99bdaf5e59169b5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _occlusionShadersMode: 2
-  _removeHands: 0
-  CustomTrackingSpace: {fileID: 0}
-  <MaskMeshFilters>k__BackingField: []
-  _cameraRig: {fileID: 1567031737}
---- !u!114 &948905726
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 948905720}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 243e1dbd2bf84b6408d83f88df3c5ca0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  computeShader: {fileID: 7200000, guid: 4cc5df36ae8ce2b4cae8289de3836f1c, type: 3}
---- !u!114 &948905727
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 948905720}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4da2cc6f08414be49a8dd29eafdfeaa2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  envDepthTextureProvider: {fileID: 948905725}
-  normalTexShader: {fileID: 7200000, guid: 094ecfc2d2e1d984c9955562fea46b9d, type: 3}
-  trackingSpace: {fileID: 0}
---- !u!114 &948905728
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 948905720}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4189f60b4292f7d49918f967d16ba418, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  barcodeTracker: {fileID: 948905724}
-  indicatorPrefab: {fileID: 2856025239876333428, guid: 0152fdb81352ee644a6d5f745165c27b, type: 3}
 --- !u!1001 &993740258
 PrefabInstance:
   m_ObjectHideFlags: 0

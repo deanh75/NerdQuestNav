@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -12,15 +13,23 @@ namespace Anaglyph.DisplayCapture
 		public bool startScreenCaptureOnStart = true;
 		public bool flipTextureOnGPU = false;
 
-		[SerializeField] private Vector2Int textureSize = new(1024, 1024);
+        // April Tag Setup
+        [SerializeField] float _tagSize = 0.16f;
+        [SerializeField] Material _tagMaterial = null;
+        [SerializeField] int _decimation = 1;
+        AprilTag.TagDetector _detector;
+        TagDrawer _drawer;
+
+        [SerializeField] private Vector2Int textureSize = new(1024, 1024);
 		public Vector2Int Size => textureSize;
 
 		private Texture2D screenTexture;
+		private Texture2D aprilTagTexture;
 		public Texture2D ScreenCaptureTexture => screenTexture;
 		
 		private RenderTexture flipTexture;
 
-		public Matrix4x4 ProjectionMatrix { get; private set; }
+        public Matrix4x4 ProjectionMatrix { get; private set; }
 
 		public UnityEvent<Texture2D> onTextureInitialized = new();
 		public UnityEvent onStarted = new();
@@ -31,7 +40,9 @@ namespace Anaglyph.DisplayCapture
 		private unsafe sbyte* imageData;
 		private int bufferSize;
 
-		private class AndroidInterface
+        
+
+        private class AndroidInterface
 		{
 			private AndroidJavaClass androidClass;
 			private AndroidJavaObject androidInstance;
@@ -62,14 +73,20 @@ namespace Anaglyph.DisplayCapture
 			androidInterface = new AndroidInterface(gameObject, Size.x, Size.y);
 
 			screenTexture = new Texture2D(Size.x, Size.y, TextureFormat.RGBA32, 1, false);
-		}
+
+            aprilTagTexture = new Texture2D(Size.x, Size.y, TextureFormat.RGBA32, 1, false);
+
+			_detector = new AprilTag.TagDetector(1024,1024, _decimation);
+
+            _drawer = new TagDrawer(_tagMaterial);
+        }
 
 		private void Start()
 		{
 			flipTexture = new RenderTexture(Size.x, Size.y, 1, RenderTextureFormat.ARGB32, 1);
 			flipTexture.Create();
 
-			onTextureInitialized.Invoke(screenTexture);
+            onTextureInitialized.Invoke(screenTexture);
 
 			if (startScreenCaptureOnStart)
 			{
@@ -102,24 +119,45 @@ namespace Anaglyph.DisplayCapture
 			onPermissionDenied.Invoke();
 		}
 
-		private unsafe void OnNewFrameAvailable()
-		{
-			if (imageData == default) return;
-			screenTexture.LoadRawTextureData((IntPtr)imageData, bufferSize);
-			screenTexture.Apply();
 
-			if (flipTextureOnGPU)
-			{
-				Graphics.Blit(screenTexture, flipTexture, new Vector2(1, -1), Vector2.zero);
-				Graphics.CopyTexture(flipTexture, screenTexture);
-			}
+        private unsafe void OnNewFrameAvailable()
+        {
+            if (imageData == default) return;
 
-			onNewFrame.Invoke();
-		}
+            // Load the raw data into the screen texture
+            screenTexture.LoadRawTextureData((IntPtr)imageData, bufferSize);
+            screenTexture.Apply(); // Updates the GPU-side texture
+
+            // If flipTextureOnGPU is enabled, process using RenderTexture
+            if (flipTextureOnGPU)
+            {
+                Graphics.Blit(screenTexture, flipTexture, new Vector2(1, -1), Vector2.zero);
+                Graphics.CopyTexture(flipTexture, screenTexture);
+            }
+
+            // Access the pixel data as a ReadOnlySpan<Color32> (optional)
+            ReadOnlySpan<Color32> pixelData = screenTexture.GetRawTextureData<Color32>();
+
+            // Perform CPU-side processing (e.g., AprilTag detection)
+            var fov = 82.0f * Mathf.Deg2Rad;
+            _detector.ProcessImage(pixelData, fov, _tagSize);
+
+			Debug.Log("[AprilTag] Detected " + _detector.DetectedTags.Count() + " tags");
+
+            // Visualize detected tags
+            foreach (var tag in _detector.DetectedTags)
+            {
+                _drawer.Draw(99, tag.Position, tag.Rotation, _tagSize);
+            }
+
+            // Invoke the event for a new frame
+            onNewFrame.Invoke();
+
+        }
 
 		private void OnCaptureStopped()
 		{
-			onStopped.Invoke();
+            onStopped.Invoke();
 		}
 #pragma warning restore IDE0051 // Remove unused private members
 	}
