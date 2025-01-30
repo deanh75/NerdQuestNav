@@ -2228,10 +2228,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startScreenCaptureOnStart: 1
   flipTextureOnGPU: 1
-  _tagSize: 0.05
-  _tagMaterial: {fileID: 0}
+  _tagSize: 0.16
+  _tagMaterial: {fileID: 2100000, guid: 5828f113fb726f64eab08340333edd86, type: 2}
   _decimation: 4
-  textureSize: {x: 1024, y: 1024}
+  grayscaleShader: {fileID: 7200000, guid: 136695ac54ccbca459d4aac58b0b82ba, type: 3}
+  textureSize: {x: 1600, y: 1600}
   onTextureInitialized:
     m_PersistentCalls:
       m_Calls:

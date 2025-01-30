@@ -1,0 +1,17 @@
+#pragma kernel CSMain
+
+// Input and output textures
+Texture2D<float4> _InputTexture;
+RWTexture2D<float> _OutputTexture;
+
+[numthreads(8, 8, 1)]
+void CSMain(uint3 id : SV_DispatchThreadID)
+{
+    int2 uv = id.xy;
+    float4 color = _InputTexture[uv];
+
+    // Convert to grayscale
+    float gray = dot(color.rgb, float3(0.299, 0.587, 0.114));
+
+    _OutputTexture[uv] = gray;
+}

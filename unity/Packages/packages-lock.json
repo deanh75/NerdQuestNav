@@ -97,15 +97,6 @@
       },
       "url": "https://packages.unity.com"
     },
-    "com.reachcloud.apriltag": {
-      "version": "https://github.com/juchong/com.reachcloud.apriltag.git",
-      "depth": 0,
-      "source": "git",
-      "dependencies": {
-        "com.unity.burst": "1.6.5"
-      },
-      "hash": "cc797448ede48c33835b61281aff256331f46b19"
-    },
     "com.unity.ai.navigation": {
       "version": "2.0.5",
       "depth": 0,
@@ -117,7 +108,7 @@
     },
     "com.unity.burst": {
       "version": "1.8.18",
-      "depth": 1,
+      "depth": 2,
       "source": "registry",
       "dependencies": {
         "com.unity.mathematics": "1.2.1",
