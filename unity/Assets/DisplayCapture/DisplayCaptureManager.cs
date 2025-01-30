@@ -77,7 +77,9 @@ namespace Anaglyph.DisplayCapture
 
 		private void Awake()
 		{
-			Instance = this;
+            AprilTagLibraryLoader.LoadLibrary();
+
+            Instance = this;
 
 			androidInterface = new AndroidInterface(gameObject, Size.x, Size.y);
 
@@ -90,8 +92,6 @@ namespace Anaglyph.DisplayCapture
 
 		private void Start()
 		{
-            AprilTagLibraryLoader.LoadLibrary();
-
             flipTexture = new RenderTexture(Size.x, Size.y, 1, RenderTextureFormat.ARGB32, 1);
 			flipTexture.Create();
 
