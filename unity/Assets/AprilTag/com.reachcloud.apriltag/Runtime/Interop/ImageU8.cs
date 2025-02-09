@@ -46,7 +46,7 @@ public sealed class ImageU8 : SafeHandleZeroOrMinusOneIsInvalid
         {
             if (Data.buf == IntPtr.Zero)
             {
-                UnityEngine.Debug.LogError("[AprilTag] ❌ ImageU8 Data.buf is NULL inside GetBufferPtr!");
+                UnityEngine.Debug.LogError("[AprilTag] ImageU8 Data.buf is NULL inside GetBufferPtr!");
                 return null;
             }
 
@@ -55,21 +55,21 @@ public sealed class ImageU8 : SafeHandleZeroOrMinusOneIsInvalid
 
             if (bufferPtr == null)
             {
-                UnityEngine.Debug.LogError("[AprilTag] ❌ ImageU8 buffer pointer is NULL after casting!");
+                UnityEngine.Debug.LogError("[AprilTag] ImageU8 buffer pointer is NULL after casting!");
                 return null;
             }
 
-            UnityEngine.Debug.Log($"[AprilTag] ✅ Accessing ImageU8 buffer at {Data.buf}, size: {Stride * Height}");
+            UnityEngine.Debug.Log($"[AprilTag] Accessing ImageU8 buffer at {Data.buf}, size: {Stride * Height}");
 
             // 🚨 **Try Writing a Test Byte to Detect Invalid Memory**
             try
             {
                 bufferPtr[0] = 0; // Write a dummy value
-                UnityEngine.Debug.Log("[AprilTag] ✅ Memory write test succeeded!");
+                UnityEngine.Debug.Log("[AprilTag] Memory write test succeeded!");
             }
             catch (Exception e)
             {
-                UnityEngine.Debug.LogError($"[AprilTag] ❌ Memory write test failed! {e.Message}");
+                UnityEngine.Debug.LogError($"[AprilTag] Memory write test failed! {e.Message}");
                 return null;
             }
 
@@ -78,35 +78,25 @@ public sealed class ImageU8 : SafeHandleZeroOrMinusOneIsInvalid
 
         public static ImageU8 Create(int width, int height)
         {
-            UnityEngine.Debug.Log($"[AprilTag] 🏗️ Requesting ImageU8 creation: {width}x{height}");
-            ImageU8 image = _Create((uint)width, (uint)height);
+            //UnityEngine.Debug.Log($"[AprilTag] Requesting ImageU8 creation with stride={width} for {width}x{height}.");
+            ImageU8 image = _CreateStride((uint)width, (uint)height, (uint)width);
 
             if (image == null || image.IsInvalid)
             {
-                UnityEngine.Debug.LogError("[AprilTag] ❌ ImageU8.Create() failed! Native function returned NULL.");
+                UnityEngine.Debug.LogError("[AprilTag] ImageU8.Create() failed! Native function returned NULL.");
                 return null;
             }
 
             if (image.Data.buf == IntPtr.Zero)
             {
-                UnityEngine.Debug.LogError("[AprilTag] ❌ ImageU8 buffer pointer is NULL after allocation!");
+                UnityEngine.Debug.LogError("[AprilTag] ImageU8 buffer pointer is NULL after allocation!");
                 return null;
             }
 
-            UnityEngine.Debug.Log($"[AprilTag] ✅ ImageU8 created! Buffer ptr: {image.Data.buf}");
+            //UnityEngine.Debug.Log($"[AprilTag] ImageU8 created! Buffer ptr: {image.Data.buf}");
             return image;
         }
 
-        /*public int Width => Data.width;
-        public int Height => Data.height;
-        public int Stride => Data.stride;
-
-        unsafe public Span<byte> Buffer
-          => new Span<byte>((void*)Data.buf, Stride * Height);
-
-        public static ImageU8 Create(int width, int height)
-          => _Create((uint)width, (uint)height);
-        */
         #endregion
 
         #region Unmanaged interface

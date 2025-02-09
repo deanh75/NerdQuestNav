@@ -254,12 +254,12 @@ public class MotionStreamer : MonoBehaviour
             }
             catch (Exception ex)
             {
-                Debug.Log($"Error resolving DNS name: {ex.Message}");
+                ThrottleLogger.Log($"Error resolving DNS name: {ex.Message}");
             }
 
             useAddress = true;
         }
-        Debug.Log("[MotionStreamer] Attempting to connect to the RoboRIO at " + ipAddress + ".");
+        ThrottleLogger.Log("[MotionStreamer] Attempting to connect to the RoboRIO at " + ipAddress + ".");
         frcDataSink = new Nt4Source(appName, ipAddress, serverPort);
         PublishTopics();
     }
@@ -269,7 +269,7 @@ public class MotionStreamer : MonoBehaviour
     /// </summary>
     private void HandleDisconnectedState()
     {
-        Debug.Log("[MotionStreamer] Robot disconnected. Resetting connection and attempting to reconnect...");
+        ThrottleLogger.Log("[MotionStreamer] Robot disconnected. Resetting connection and attempting to reconnect...");
         frcDataSink.Client.Disconnect();
         ConnectToRobot();
     }
@@ -326,7 +326,7 @@ public class MotionStreamer : MonoBehaviour
         if (resetInProgress && command == 0)
         {
             resetInProgress = false;
-            Debug.Log("[MotionStreamer] Reset operation completed");
+            ThrottleLogger.Log("[MotionStreamer] Reset operation completed");
             return;
         }
 
@@ -335,7 +335,7 @@ public class MotionStreamer : MonoBehaviour
             case 1:
                 if (!resetInProgress)
                 {
-                    Debug.Log("[MotionStreamer] Received heading reset request, initiating recenter...");
+                    ThrottleLogger.Log("[MotionStreamer] Received heading reset request, initiating recenter...");
                     RecenterPlayer();
                     resetInProgress = true;
                 }
@@ -343,14 +343,14 @@ public class MotionStreamer : MonoBehaviour
             case 2:
                 if (!resetInProgress)
                 {
-                    Debug.Log("[MotionStreamer] Received pose reset request, initiating reset...");
+                    ThrottleLogger.Log("[MotionStreamer] Received pose reset request, initiating reset...");
                     InitiatePoseReset();
-                    Debug.Log("[MotionStreamer] Processing pose reset request.");
+                    ThrottleLogger.Log("[MotionStreamer] Processing pose reset request.");
                     resetInProgress = true;
                 }
                 break;
             case 3:
-                Debug.Log("[MotionStreamer] Ping received, responding...");
+                ThrottleLogger.Log("[MotionStreamer] Ping received, responding...");
                 frcDataSink.PublishValue("/questnav/miso", 97);  // 97 for ping response
                 break;
             default:
@@ -385,10 +385,10 @@ public class MotionStreamer : MonoBehaviour
                 // Add delay between retries to allow for network latency
                 if (i > 0) {
                     System.Threading.Thread.Sleep((int)retryDelayMs);
-                    Debug.Log($"[MotionStreamer] Attempt {attemptCount} of {maxRetries}...");
+                    ThrottleLogger.Log($"[MotionStreamer] Attempt {attemptCount} of {maxRetries}...");
                 }
 
-                Debug.Log($"[MotionStreamer] Reading NetworkTables Values (Attempt {attemptCount}):");
+                ThrottleLogger.Log($"[MotionStreamer] Reading NetworkTables Values (Attempt {attemptCount}):");
 
                 // Read the pose array from NetworkTables
                 // Format: [X, Y, Rotation] in FRC field coordinates
@@ -399,19 +399,19 @@ public class MotionStreamer : MonoBehaviour
                     // Check if pose is within valid field boundaries
                     if (resetPose[0] < 0 || resetPose[0] > FIELD_LENGTH ||
                         resetPose[1] < 0 || resetPose[1] > FIELD_WIDTH) {
-                        Debug.LogWarning($"[MotionStreamer] Reset pose outside field boundaries: X:{resetPose[0]:F3} Y:{resetPose[1]:F3}");
+                        ThrottleLogger.LogWarning($"[MotionStreamer] Reset pose outside field boundaries: X:{resetPose[0]:F3} Y:{resetPose[1]:F3}");
                         continue;
                     }
                     success = true;
-                    Debug.Log($"[MotionStreamer] Successfully read reset pose values on attempt {attemptCount}");
+                    ThrottleLogger.Log($"[MotionStreamer] Successfully read reset pose values on attempt {attemptCount}");
                 }
 
-                Debug.Log($"[MotionStreamer] Values (Attempt {attemptCount}): X:{resetPose?[0]:F3} Y:{resetPose?[1]:F3} Rot:{resetPose?[2]:F3}");
+                ThrottleLogger.Log($"[MotionStreamer] Values (Attempt {attemptCount}): X:{resetPose?[0]:F3} Y:{resetPose?[1]:F3} Rot:{resetPose?[2]:F3}");
             }
 
             // Exit if we couldn't get valid pose data
             if (!success) {
-                Debug.LogWarning($"[MotionStreamer] Failed to read valid reset pose values after {attemptCount} attempts");
+                ThrottleLogger.LogWarning($"[MotionStreamer] Failed to read valid reset pose values after {attemptCount} attempts");
                 return;
             }
 
@@ -424,13 +424,13 @@ public class MotionStreamer : MonoBehaviour
             while (resetRotation > 180) resetRotation -= 360;
             while (resetRotation < -180) resetRotation += 360;
 
-            Debug.Log($"[MotionStreamer] Starting pose reset - Target: FRC X:{resetX:F2} Y:{resetY:F2} Rot:{resetRotation:F2}°");
+            ThrottleLogger.Log($"[MotionStreamer] Starting pose reset - Target: FRC X:{resetX:F2} Y:{resetY:F2} Rot:{resetRotation:F2}°");
 
             // Store current VR camera state for reference
             Vector3 currentCameraPos = vrCamera.position;
             Quaternion currentCameraRot = vrCamera.rotation;
 
-            Debug.Log($"[MotionStreamer] Before reset - Camera Pos:{currentCameraPos:F3} Rot:{currentCameraRot.eulerAngles:F3}");
+            ThrottleLogger.Log($"[MotionStreamer] Before reset - Camera Pos:{currentCameraPos:F3} Rot:{currentCameraRot.eulerAngles:F3}");
 
             // Convert FRC coordinates to Unity coordinates:
             // Unity uses a left-handed coordinate system with Y as the vertical axis (aligned with gravity)
@@ -465,8 +465,8 @@ public class MotionStreamer : MonoBehaviour
             if (yawDelta > 180) yawDelta -= 360;
             if (yawDelta < -180) yawDelta += 360;
 
-            Debug.Log($"[MotionStreamer] Calculated adjustments - Position delta:{positionDelta:F3} Rotation delta:{yawDelta:F3}°");
-            Debug.Log($"[MotionStreamer] Target Unity Position: {targetUnityPosition:F3}");
+            ThrottleLogger.Log($"[MotionStreamer] Calculated adjustments - Position delta:{positionDelta:F3} Rotation delta:{yawDelta:F3}°");
+            ThrottleLogger.Log($"[MotionStreamer] Target Unity Position: {targetUnityPosition:F3}");
 
             // Store the original offset between camera and its root
             // This helps maintain proper VR tracking space
@@ -480,22 +480,22 @@ public class MotionStreamer : MonoBehaviour
             vrCameraRoot.position += positionDelta;
 
             // Log final position and rotation for verification
-            Debug.Log($"[MotionStreamer] After reset - Camera Pos:{vrCamera.position:F3} Rot:{vrCamera.rotation.eulerAngles:F3}");
+            ThrottleLogger.Log($"[MotionStreamer] After reset - Camera Pos:{vrCamera.position:F3} Rot:{vrCamera.rotation.eulerAngles:F3}");
 
             // Calculate and check position error to ensure accuracy
             float posError = Vector3.Distance(vrCamera.position, targetUnityPosition);
-            Debug.Log($"[MotionStreamer] Position error after reset: {posError:F3}m");
+            ThrottleLogger.Log($"[MotionStreamer] Position error after reset: {posError:F3}m");
 
             // Warn if position error is larger than expected threshold
             if (posError > 0.01f) {  // 1cm threshold
-                Debug.LogWarning($"[MotionStreamer] Large position error detected!");
+                ThrottleLogger.LogWarning($"[MotionStreamer] Large position error detected!");
             }
 
             frcDataSink.PublishValue("/questnav/miso", 98);
         }
         catch (Exception e) {
-            Debug.LogError($"[MotionStreamer] Error during pose reset: {e.Message}");
-            Debug.LogException(e);
+            ThrottleLogger.LogError($"[MotionStreamer] Error during pose reset: {e.Message}");
+            ThrottleLogger.LogException(e);
             frcDataSink.PublishValue("/questnav/miso", 0);
             resetInProgress = false;
         }
@@ -518,8 +518,8 @@ public class MotionStreamer : MonoBehaviour
             frcDataSink.PublishValue("/questnav/miso", 99);
         }
         catch (Exception e) {
-            Debug.LogError($"[MotionStreamer] Error during pose reset: {e.Message}");
-            Debug.LogException(e);
+            ThrottleLogger.LogError($"[MotionStreamer] Error during pose reset: {e.Message}");
+            ThrottleLogger.LogException(e);
             frcDataSink.PublishValue("/questnav/miso", 0);
             resetInProgress = false;
         }
@@ -532,7 +532,7 @@ public class MotionStreamer : MonoBehaviour
     /// </summary>
     public void UpdateTeamNumber()
     {
-        Debug.Log("[MotionStreamer] Updating Team Number");
+        ThrottleLogger.Log("[MotionStreamer] Updating Team Number");
         teamNumber = teamInput.text;
         PlayerPrefs.SetString("TeamNumber", teamNumber);
         PlayerPrefs.Save();
@@ -581,7 +581,7 @@ public class MotionStreamer : MonoBehaviour
         }
         else
         {
-            Debug.LogError("Placeholder is not assigned or not a TextMeshProUGUI component.");
+            ThrottleLogger.LogError("Placeholder is not assigned or not a TextMeshProUGUI component.");
         }
     }
     #endregion
@@ -613,7 +613,7 @@ public class MotionStreamer : MonoBehaviour
     /// <param name="text">The current text in the input field</param>
     private void OnInputFieldSelected(string text)
     {
-        Debug.Log("[MotionStreamer] Input Selected");
+        ThrottleLogger.Log("[MotionStreamer] Input Selected");
     }
     #endregion
 }

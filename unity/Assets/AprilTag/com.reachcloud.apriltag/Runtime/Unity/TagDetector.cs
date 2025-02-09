@@ -103,7 +103,7 @@ public sealed class TagDetector : System.IDisposable
                 //UnityEngine.Debug.Log("[AprilTag]Running the AprilTag detector...");
                 using var tags = _detector.Detect(_image);
                 var tagCount = tags.Length;
-                UnityEngine.Debug.Log($"[AprilTag]Detector found {tagCount} tags.");
+                //UnityEngine.Debug.Log($"[AprilTag]Detector found {tagCount} tags.");
 
                 // Convert the detector output into a NativeArray
                 using var jobInput = new NativeArray<PoseEstimationJob.Input>(tagCount, Allocator.TempJob);
@@ -114,7 +114,7 @@ public sealed class TagDetector : System.IDisposable
                 for (var i = 0; i < tagCount; i++)
                 {
                     slice[i] = new PoseEstimationJob.Input(ref tags[i]);
-                    UnityEngine.Debug.Log($"[AprilTag]Added tag {i} to job input: {tags[i]}.");
+                    UnityEngine.Debug.Log($"[AprilTag] Added tag {i} to job input: {tags[i]}.");
                 }
 
                 // Pose estimation output buffer
@@ -138,7 +138,7 @@ public sealed class TagDetector : System.IDisposable
             catch (Exception ex)
             {
                 // Log any exceptions
-                UnityEngine.Debug.LogError($"[AprilTag]An exception occurred in RunDetectorAndEstimator: {ex.Message}\n{ex.StackTrace}");
+                UnityEngine.Debug.LogError($"[AprilTag] An exception occurred in RunDetectorAndEstimator: {ex.Message}\n{ex.StackTrace}");
             }
         }
 

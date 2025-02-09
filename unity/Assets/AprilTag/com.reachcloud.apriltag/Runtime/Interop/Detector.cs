@@ -186,7 +186,7 @@ namespace AprilTag.Interop
                 // Check the result
                 if (detections == null)
                 {
-                    UnityEngine.Debug.LogWarning("[AprilTag] No detections were returned by _Detect.");
+                    UnityEngine.Debug.LogWarning("[AprilTag] Detections returned by _Detect was null!");
                 }
                 else
                 {
