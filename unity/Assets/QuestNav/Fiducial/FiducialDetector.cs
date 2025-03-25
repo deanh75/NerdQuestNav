@@ -136,8 +136,6 @@ namespace QuestNav.Fiducial
 /// </summary>
 private TagPose CalculateTagPose(Detection detection, PassthroughCameraIntrinsics intrinsics)
 {
-    
-    detection
     // Extract corner points from detection
     Vector2 center = new Vector2((float)detection.Center.x, (float)detection.Center.y);
     Vector2[] corners = new Vector2[4]
