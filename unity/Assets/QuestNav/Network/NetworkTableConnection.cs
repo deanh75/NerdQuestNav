@@ -324,11 +324,13 @@ namespace QuestNav.Network
             bool connectionEstablished = false;
             List<string> candidateAddresses = new List<string>()
             {
-                generateIP(),
-                "172.22.11.2",
-                $"roboRIO-{teamNumber}-FRC.local",
-                $"roboRIO-{teamNumber}-FRC.lan",
-                $"roboRIO-{teamNumber}-FRC.frc-field.local"
+                "127.0.0.1",
+                "localhost"
+                // generateIP(),
+                // "172.22.11.2",
+                // $"roboRIO-{teamNumber}-FRC.local",
+                // $"roboRIO-{teamNumber}-FRC.lan",
+                // $"roboRIO-{teamNumber}-FRC.frc-field.local"
             };
 
             while (!connectionEstablished)
@@ -338,7 +340,7 @@ namespace QuestNav.Network
                 {
                     Log($"Network not reachable. Waiting {QuestNavConstants.Network.UNREACHABLE_NETWORK_DELAY} seconds before reattempting.", QueuedLogger.LogLevel.Warning);
                     await Task.Delay(QuestNavConstants.Network.UNREACHABLE_NETWORK_DELAY * 1000);
-                    continue;
+                    // continue;
                 }
 
                 Log("Starting NT4 connection attempt cycle");
