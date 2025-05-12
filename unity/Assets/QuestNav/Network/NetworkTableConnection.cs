@@ -330,8 +330,7 @@ namespace QuestNav.Network
                 // When in simulation mode, only try to connect to localhost
                 candidateAddresses = new List<string>()
                 {
-                    "127.0.0.1",
-                    "localhost"
+                    "127.0.0.1"
                 };
             }
             else
@@ -547,6 +546,8 @@ namespace QuestNav.Network
         public void UpdateTeamNumber(string teamNumber)
         {
             this.teamNumber = teamNumber;
+            Log($"Team number updated to {teamNumber}");
+
 
             // Clear cached IP and candidate failure data.
             ipAddress = "";
