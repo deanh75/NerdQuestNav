@@ -183,7 +183,7 @@ namespace QuestNav.UI
                 {
                     myAddressLocal = ip.ToString();
                     TextMeshProUGUI ipText = ipAddressText as TextMeshProUGUI;
-                    if (myAddressLocal == "127.0.0.1")
+                    if (myAddressLocal == "127.0.0.1" && teamNumber != "localhost")
                     {
                         ipText.text = "No Adapter Found";
                     }

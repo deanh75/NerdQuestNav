@@ -166,6 +166,11 @@ namespace QuestNav.Network
         private Coroutine _connectionCoroutine;
 
         /// <summary>
+        /// Cancellation token source for cancelling ongoing connection attempts
+        /// </summary>
+        private System.Threading.CancellationTokenSource _connectionCancellationTokenSource;
+
+        /// <summary>
         /// used to only set up the coroutine once in async
         /// </summary>
         private bool connectionAttempt = false;
@@ -282,27 +287,56 @@ namespace QuestNav.Network
             connectionAttemptCompleted = false;
             connectionAttemptStartTime = Time.time;
 
+            // Cancel any existing connection attempt
+            CancelExistingConnectionAttempt();
+
+            // Start a new connection attempt with a fresh cancellation token
+            _connectionCancellationTokenSource = new System.Threading.CancellationTokenSource();
+            _connectionCoroutine = StartCoroutine(ConnectionCoroutineWrapper(_connectionCancellationTokenSource.Token));
+        }
+
+        /// <summary>
+        /// Cancels any existing connection attempt by stopping the coroutine and cancelling the task
+        /// </summary>
+        private void CancelExistingConnectionAttempt()
+        {
             // Cancel any existing connection coroutine
             if (_connectionCoroutine != null)
             {
                 StopCoroutine(_connectionCoroutine);
+                _connectionCoroutine = null;
             }
 
-            // Start a new connection attempt
-            _connectionCoroutine = StartCoroutine(ConnectionCoroutineWrapper());
+            // Cancel any existing connection task
+            if (_connectionCancellationTokenSource != null)
+            {
+                _connectionCancellationTokenSource.Cancel();
+                _connectionCancellationTokenSource.Dispose();
+                _connectionCancellationTokenSource = null;
+            }
         }
 
         /// <summary>
         /// A coroutine wrapper that waits until the asynchronous connection method completes.
         /// This wrapper enables setting timeout guardbands for the connection process.
         /// </summary>
-        private IEnumerator ConnectionCoroutineWrapper()
+        /// <param name="cancellationToken">Token to cancel the connection attempt</param>
+        private IEnumerator ConnectionCoroutineWrapper(System.Threading.CancellationToken cancellationToken)
         {
-            var connectionTask = AttemptConnectionAsync();
+            var connectionTask = AttemptConnectionAsync(cancellationToken);
 
-            while (!connectionTask.IsCompleted)
+            while (!connectionTask.IsCompleted && !cancellationToken.IsCancellationRequested)
             {
                 yield return null;
+            }
+
+            // If the task was cancelled, we don't need to do anything else
+            if (cancellationToken.IsCancellationRequested)
+            {
+                Log("Connection attempt was cancelled", QueuedLogger.LogLevel.Info);
+                connectionAttempt = false;  // Reset flag to allow new attempts
+                connectionAttemptCompleted = true;
+                yield break;
             }
 
             // Check if the task completed successfully
@@ -319,7 +353,8 @@ namespace QuestNav.Network
         /// Uses async DNS resolution and wraps blocking calls in Task.Run to avoid blocking the main Unity thread.
         /// Will try candidates until successful or all fail, then retry with exponential backoff.
         /// </summary>
-        private async Task AttemptConnectionAsync()
+        /// <param name="cancellationToken">Token to cancel the connection attempt</param>
+        private async Task AttemptConnectionAsync(System.Threading.CancellationToken cancellationToken)
         {
             bool connectionEstablished = false;
             List<string> candidateAddresses;
@@ -345,13 +380,28 @@ namespace QuestNav.Network
                 };
             }
 
-            while (!connectionEstablished)
+            while (!connectionEstablished && !cancellationToken.IsCancellationRequested)
             {
+                // Check for cancellation
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    Log("Connection attempt cancelled", QueuedLogger.LogLevel.Info);
+                    return;
+                }
+
                 // Check if the network is reachable, but skip this check for localhost connections
                 if (teamNumber != "localhost" && Application.internetReachability == NetworkReachability.NotReachable)
                 {
                     Log($"Network not reachable. Waiting {QuestNavConstants.Network.UNREACHABLE_NETWORK_DELAY} seconds before reattempting.", QueuedLogger.LogLevel.Warning);
-                    await Task.Delay(QuestNavConstants.Network.UNREACHABLE_NETWORK_DELAY * 1000);
+                    try
+                    {
+                        await Task.Delay(QuestNavConstants.Network.UNREACHABLE_NETWORK_DELAY * 1000, cancellationToken);
+                    }
+                    catch (TaskCanceledException)
+                    {
+                        Log("Connection attempt cancelled during network delay", QueuedLogger.LogLevel.Info);
+                        return;
+                    }
                     continue;
                 }
 
@@ -459,7 +509,15 @@ namespace QuestNav.Network
                 if (!connectionEstablished)
                 {
                     Log($"No connection to any addresses. Retry in {reconnectDelay} seconds", QueuedLogger.LogLevel.Warning);
-                    await Task.Delay((int)(reconnectDelay * 1000));
+                    try
+                    {
+                        await Task.Delay((int)(reconnectDelay * 1000), cancellationToken);
+                    }
+                    catch (TaskCanceledException)
+                    {
+                        Log("Connection attempt cancelled during retry delay", QueuedLogger.LogLevel.Info);
+                        return;
+                    }
                     reconnectDelay = Mathf.Min(reconnectDelay * 2, QuestNavConstants.Network.MAX_RECONNECT_DELAY);
                 }
             }
@@ -528,6 +586,9 @@ namespace QuestNav.Network
         {
             Log("Forcing reconnection due to heartbeat failure");
 
+            // Cancel any existing connection attempt
+            CancelExistingConnectionAttempt();
+
             // Disconnect existing connection
             SafeDisconnect();
 
@@ -548,17 +609,12 @@ namespace QuestNav.Network
             this.teamNumber = teamNumber;
             Log($"Team number updated to {teamNumber}");
 
-
             // Clear cached IP and candidate failure data.
             ipAddress = "";
             failedCandidates.Clear();
 
-            // If a connection coroutine is already running, stop it.
-            if (_connectionCoroutine != null)
-            {
-                StopCoroutine(_connectionCoroutine);
-                _connectionCoroutine = null;
-            }
+            // Cancel any existing connection attempt
+            CancelExistingConnectionAttempt();
 
             // Disconnect existing connection, if any.
             SafeDisconnect();
@@ -665,6 +721,21 @@ namespace QuestNav.Network
             }
 
             return frcDataSink.GetDoubleArray(topic);
+        }
+        #endregion
+
+        #region Unity Lifecycle Methods
+        /// <summary>
+        /// Called when the component is being destroyed.
+        /// Ensures proper cleanup of resources.
+        /// </summary>
+        private void OnDestroy()
+        {
+            // Cancel any ongoing connection attempts
+            CancelExistingConnectionAttempt();
+
+            // Disconnect from the server
+            SafeDisconnect();
         }
         #endregion
 
