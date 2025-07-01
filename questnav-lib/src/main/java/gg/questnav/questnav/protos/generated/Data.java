@@ -14,37 +14,45 @@ import us.hebi.quickbuf.ProtoSink;
 import us.hebi.quickbuf.ProtoSource;
 import us.hebi.quickbuf.ProtoUtil;
 import us.hebi.quickbuf.RepeatedByte;
+import us.hebi.quickbuf.RepeatedDouble;
 
 public final class Data {
-    private static final RepeatedByte descriptorData = ProtoUtil.decodeBase64(1315,
+    private static final RepeatedByte descriptorData = ProtoUtil.decodeBase64(1562,
         "CgpkYXRhLnByb3RvEhRxdWVzdG5hdi5wcm90b3MuZGF0YRoQZ2VvbWV0cnkyZC5wcm90byKNAQoZUHJv" + 
         "dG9idWZRdWVzdE5hdkZyYW1lRGF0YRIfCgtmcmFtZV9jb3VudBgBIAEoBVIKZnJhbWVDb3VudBIcCgl0" + 
         "aW1lc3RhbXAYAiABKAFSCXRpbWVzdGFtcBIxCgZwb3NlMmQYAyABKAsyGS53cGkucHJvdG8uUHJvdG9i" + 
         "dWZQb3NlMmRSBnBvc2UyZCKoAQoaUHJvdG9idWZRdWVzdE5hdkRldmljZURhdGESMgoVdHJhY2tpbmdf" + 
         "bG9zdF9jb3VudGVyGAEgASgFUhN0cmFja2luZ0xvc3RDb3VudGVyEi0KEmN1cnJlbnRseV90cmFja2lu" + 
         "ZxgCIAEoCFIRY3VycmVudGx5VHJhY2tpbmcSJwoPYmF0dGVyeV9wZXJjZW50GAMgASgFUg5iYXR0ZXJ5" + 
-        "UGVyY2VudEJDCiVnZy5xdWVzdG5hdi5xdWVzdG5hdi5wcm90b3MuZ2VuZXJhdGVkqgIZUXVlc3ROYXYu" + 
-        "UHJvdG9zLkdlbmVyYXRlZErkBgoGEgQAAx8BCggKAQwSAwADFQoICgECEgMCAB0KCAoBCBIDAwA2CgkK" + 
-        "AgglEgMDADYKCAoBCBIDBAA+CgkKAggBEgMEAD4KJQoCAwASAwcAGhoaIEltcG9ydCBnZW9tZXRyeSBt" + 
-        "ZXNzYWdlcwoKMwoCBAASBAoAEwEaJyBUcmFja2luZyBkYXRhIHRoYXQgaXMgc2VudCBldmVyeSBsb29w" + 
-        "CgoKCgMEAAESAwoIIQo2CgQEAAIAEgMMAhgaKSBOdW1iZXIgb2YgZnJhbWVzIHByb2Nlc3NlZCBieSB0" + 
-        "aGUgUXVlc3QKCgwKBQQAAgAFEgMMAgcKDAoFBAACAAESAwwIEwoMCgUEAAIAAxIDDBYXCj8KBAQAAgES" + 
-        "Aw8CFxoyIFRpbWUgKGluIHNlY29uZHMpIHNpbmNlIHRoZSBRdWVzdE5hdiBhcHAgc3RhcnRlZAoKDAoF" + 
-        "BAACAQUSAw8CCAoMCgUEAAIBARIDDwkSCgwKBQQAAgEDEgMPFRYKOgoEBAACAhIDEgImGi0gVGhlIDJk" + 
-        "IGZpZWxkLXJlbGF0aXZlIHBvc2l0aW9uIG9mIHRoZSBxdWVzdAoKDAoFBAACAgYSAxICGgoMCgUEAAIC" + 
-        "ARIDEhshCgwKBQQAAgIDEgMSJCUKLQoCBAESBBYAHwEaISBEZXZpY2UgZGF0YSB0aGF0IGlzIHNlbnQg" + 
-        "c2xvd2VyCgoKCgMEAQESAxYIIgpgCgQEAQIAEgMYAiIaUyBOdW1iZXIgb2YgdGltZXMgdGhlIFF1ZXN0" + 
-        "IGhhcyBsb3N0IHRyYWNraW5nIGFmdGVyIGhhdmluZyBpdCBzaW5jZSB0aGUgYXBwIHN0YXJ0ZWQKCgwK" + 
-        "BQQBAgAFEgMYAgcKDAoFBAECAAESAxgIHQoMCgUEAQIAAxIDGCAhCjIKBAQBAgESAxsCHholIElmIHRo" + 
-        "ZSBRdWVzdCBpcyBjdXJyZW50bHkgdHJhY2tpbmc/CgoMCgUEAQIBBRIDGwIGCgwKBQQBAgEBEgMbBxkK",
-        "DAoFBAECAQMSAxscHQoyCgQEAQICEgMeAhwaJSBUaGUgYmF0dGVyeSBwZXJjZW50YWdlIG9mIHRoZSBR" + 
-        "dWVzdAoKDAoFBAECAgUSAx4CBwoMCgUEAQICARIDHggXCgwKBQQBAgIDEgMeGhtiBnByb3RvMw==");
+        "UGVyY2VudCI4ChdQcm90b2J1ZlF1ZXN0TmF2VGFnRGF0YRIdCgh0YWdfZGF0YRgBIAMoAUICEAFSB3Rh" + 
+        "Z0RhdGFCQwolZ2cucXVlc3RuYXYucXVlc3RuYXYucHJvdG9zLmdlbmVyYXRlZKoCGVF1ZXN0TmF2LlBy" + 
+        "b3Rvcy5HZW5lcmF0ZWRKoQgKBhIEAAMlAQoICgEMEgMAAxUKCAoBAhIDAgAdCggKAQgSAwMANgoJCgII" + 
+        "JRIDAwA2CggKAQgSAwQAPgoJCgIIARIDBAA+CiUKAgMAEgMHABoaGiBJbXBvcnQgZ2VvbWV0cnkgbWVz" + 
+        "c2FnZXMKCjMKAgQAEgQKABMBGicgVHJhY2tpbmcgZGF0YSB0aGF0IGlzIHNlbnQgZXZlcnkgbG9vcAoK" + 
+        "CgoDBAABEgMKCCEKNgoEBAACABIDDAIYGikgTnVtYmVyIG9mIGZyYW1lcyBwcm9jZXNzZWQgYnkgdGhl" + 
+        "IFF1ZXN0CgoMCgUEAAIABRIDDAIHCgwKBQQAAgABEgMMCBMKDAoFBAACAAMSAwwWFwo/CgQEAAIBEgMP" + 
+        "AhcaMiBUaW1lIChpbiBzZWNvbmRzKSBzaW5jZSB0aGUgUXVlc3ROYXYgYXBwIHN0YXJ0ZWQKCgwKBQQA" + 
+        "AgEFEgMPAggKDAoFBAACAQESAw8JEgoMCgUEAAIBAxIDDxUWCjoKBAQAAgISAxICJhotIFRoZSAyZCBm" + 
+        "aWVsZC1yZWxhdGl2ZSBwb3NpdGlvbiBvZiB0aGUgcXVlc3QKCgwKBQQAAgIGEgMSAhoKDAoFBAACAgES" + 
+        "AxIbIQoMCgUEAAICAxIDEiQlCi0KAgQBEgQWAB8BGiEgRGV2aWNlIGRhdGEgdGhhdCBpcyBzZW50IHNs" + 
+        "b3dlcgoKCgoDBAEBEgMWCCIKYAoEBAECABIDGAIiGlMgTnVtYmVyIG9mIHRpbWVzIHRoZSBRdWVzdCBo" + 
+        "YXMgbG9zdCB0cmFja2luZyBhZnRlciBoYXZpbmcgaXQgc2luY2UgdGhlIGFwcCBzdGFydGVkCgoMCgUE" + 
+        "AQIABRIDGAIHCgwKBQQBAgABEgMYCB0KDAoFBAECAAMSAxggIQoyCgQEAQIBEgMbAh4aJSBJZiB0aGUg",
+        "UXVlc3QgaXMgY3VycmVudGx5IHRyYWNraW5nPwoKDAoFBAECAQUSAxsCBgoMCgUEAQIBARIDGwcZCgwK" + 
+        "BQQBAgEDEgMbHB0KMgoEBAECAhIDHgIcGiUgVGhlIGJhdHRlcnkgcGVyY2VudGFnZSBvZiB0aGUgUXVl" + 
+        "c3QKCgwKBQQBAgIFEgMeAgcKDAoFBAECAgESAx4IFwoMCgUEAQICAxIDHhobCi4KAgQCEgQiACUBGiIg" + 
+        "VGFnIERhdGEgdGhhdCBpcyBzZW50IGV2ZXJ5IGxvb3AKCgoKAwQCARIDIggfCioKBAQCAgASAyQCLRod" + 
+        "IFRoZSB0YWcgZGF0YSBmcm9tIHRoZSBxdWVzdAoKDAoFBAICAAQSAyQCCgoMCgUEAgIABRIDJAsRCgwK" + 
+        "BQQCAgABEgMkEhoKDAoFBAICAAMSAyQdHgoMCgUEAgIACBIDJB8sCg0KBgQCAgAIAhIDJCArYgZwcm90" + 
+        "bzM=");
 
     static final Descriptors.FileDescriptor descriptor = Descriptors.FileDescriptor.internalBuildGeneratedFileFrom("data.proto", "questnav.protos.data", descriptorData, Geometry2D.getDescriptor());
 
     static final Descriptors.Descriptor questnav_protos_data_ProtobufQuestNavFrameData_descriptor = descriptor.internalContainedType(55, 141, "ProtobufQuestNavFrameData", "questnav.protos.data.ProtobufQuestNavFrameData");
 
     static final Descriptors.Descriptor questnav_protos_data_ProtobufQuestNavDeviceData_descriptor = descriptor.internalContainedType(199, 168, "ProtobufQuestNavDeviceData", "questnav.protos.data.ProtobufQuestNavDeviceData");
+
+    static final Descriptors.Descriptor questnav_protos_data_ProtobufQuestNavTagData_descriptor = descriptor.internalContainedType(369, 56, "ProtobufQuestNavTagData", "questnav.protos.data.ProtobufQuestNavTagData");
 
     /**
      * @return this proto file's descriptor.
@@ -1043,6 +1051,335 @@ public final class Data {
             static final FieldName batteryPercent = FieldName.forField("batteryPercent", "battery_percent");
 
             static final FieldName currentlyTracking = FieldName.forField("currentlyTracking", "currently_tracking");
+        }
+    }
+
+    /**
+     * <pre>
+     *  Tag Data that is sent every loop
+     * </pre>
+     *
+     * Protobuf type {@code ProtobufQuestNavTagData}
+     */
+    public static final class ProtobufQuestNavTagData extends ProtoMessage<ProtobufQuestNavTagData> implements Cloneable {
+        private static final long serialVersionUID = 0L;
+
+        /**
+         * <pre>
+         *  The tag data from the quest
+         * </pre>
+         *
+         * <code>repeated double tag_data = 1 [packed = true];</code>
+         */
+        private final RepeatedDouble tagData = RepeatedDouble.newEmptyInstance();
+
+        private ProtobufQuestNavTagData() {
+        }
+
+        /**
+         * <pre>
+         *  Tag Data that is sent every loop
+         * </pre>
+         *
+         * @return a new empty instance of {@code ProtobufQuestNavTagData}
+         */
+        public static ProtobufQuestNavTagData newInstance() {
+            return new ProtobufQuestNavTagData();
+        }
+
+        /**
+         * <pre>
+         *  The tag data from the quest
+         * </pre>
+         *
+         * <code>repeated double tag_data = 1 [packed = true];</code>
+         * @return whether the tagData field is set
+         */
+        public boolean hasTagData() {
+            return (bitField0_ & 0x00000001) != 0;
+        }
+
+        /**
+         * <pre>
+         *  The tag data from the quest
+         * </pre>
+         *
+         * <code>repeated double tag_data = 1 [packed = true];</code>
+         * @return this
+         */
+        public ProtobufQuestNavTagData clearTagData() {
+            bitField0_ &= ~0x00000001;
+            tagData.clear();
+            return this;
+        }
+
+        /**
+         * <pre>
+         *  The tag data from the quest
+         * </pre>
+         *
+         * <code>repeated double tag_data = 1 [packed = true];</code>
+         *
+         * This method returns the internal storage object without modifying any has state.
+         * The returned object should not be modified and be treated as read-only.
+         *
+         * Use {@link #getMutableTagData()} if you want to modify it.
+         *
+         * @return internal storage object for reading
+         */
+        public RepeatedDouble getTagData() {
+            return tagData;
+        }
+
+        /**
+         * <pre>
+         *  The tag data from the quest
+         * </pre>
+         *
+         * <code>repeated double tag_data = 1 [packed = true];</code>
+         *
+         * This method returns the internal storage object and sets the corresponding
+         * has state. The returned object will become part of this message and its
+         * contents may be modified as long as the has state is not cleared.
+         *
+         * @return internal storage object for modifications
+         */
+        public RepeatedDouble getMutableTagData() {
+            bitField0_ |= 0x00000001;
+            return tagData;
+        }
+
+        /**
+         * <pre>
+         *  The tag data from the quest
+         * </pre>
+         *
+         * <code>repeated double tag_data = 1 [packed = true];</code>
+         * @param value the tagData to add
+         * @return this
+         */
+        public ProtobufQuestNavTagData addTagData(final double value) {
+            bitField0_ |= 0x00000001;
+            tagData.add(value);
+            return this;
+        }
+
+        /**
+         * <pre>
+         *  The tag data from the quest
+         * </pre>
+         *
+         * <code>repeated double tag_data = 1 [packed = true];</code>
+         * @param values the tagData to add
+         * @return this
+         */
+        public ProtobufQuestNavTagData addAllTagData(final double... values) {
+            bitField0_ |= 0x00000001;
+            tagData.addAll(values);
+            return this;
+        }
+
+        @Override
+        public ProtobufQuestNavTagData copyFrom(final ProtobufQuestNavTagData other) {
+            cachedSize = other.cachedSize;
+            if ((bitField0_ | other.bitField0_) != 0) {
+                bitField0_ = other.bitField0_;
+                tagData.copyFrom(other.tagData);
+            }
+            return this;
+        }
+
+        @Override
+        public ProtobufQuestNavTagData mergeFrom(final ProtobufQuestNavTagData other) {
+            if (other.isEmpty()) {
+                return this;
+            }
+            cachedSize = -1;
+            if (other.hasTagData()) {
+                getMutableTagData().addAll(other.tagData);
+            }
+            return this;
+        }
+
+        @Override
+        public ProtobufQuestNavTagData clear() {
+            if (isEmpty()) {
+                return this;
+            }
+            cachedSize = -1;
+            bitField0_ = 0;
+            tagData.clear();
+            return this;
+        }
+
+        @Override
+        public ProtobufQuestNavTagData clearQuick() {
+            if (isEmpty()) {
+                return this;
+            }
+            cachedSize = -1;
+            bitField0_ = 0;
+            tagData.clear();
+            return this;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (o == this) {
+                return true;
+            }
+            if (!(o instanceof ProtobufQuestNavTagData)) {
+                return false;
+            }
+            ProtobufQuestNavTagData other = (ProtobufQuestNavTagData) o;
+            return bitField0_ == other.bitField0_
+                && (!hasTagData() || tagData.equals(other.tagData));
+        }
+
+        @Override
+        public void writeTo(final ProtoSink output) throws IOException {
+            if ((bitField0_ & 0x00000001) != 0) {
+                output.writeRawByte((byte) 10);
+                output.writePackedDoubleNoTag(tagData);
+            }
+        }
+
+        @Override
+        protected int computeSerializedSize() {
+            int size = 0;
+            if ((bitField0_ & 0x00000001) != 0) {
+                final int dataSize = 8 * tagData.length();
+                size += 1 + ProtoSink.computeDelimitedSize(dataSize);
+            }
+            return size;
+        }
+
+        @Override
+        @SuppressWarnings("fallthrough")
+        public ProtobufQuestNavTagData mergeFrom(final ProtoSource input) throws IOException {
+            // Enabled Fall-Through Optimization (QuickBuffers)
+            int tag = input.readTag();
+            while (true) {
+                switch (tag) {
+                    case 10: {
+                        // tagData [packed=true]
+                        input.readPackedDouble(tagData);
+                        bitField0_ |= 0x00000001;
+                        tag = input.readTag();
+                        if (tag != 0) {
+                            break;
+                        }
+                    }
+                    case 0: {
+                        return this;
+                    }
+                    default: {
+                        if (!input.skipField(tag)) {
+                            return this;
+                        }
+                        tag = input.readTag();
+                        break;
+                    }
+                    case 9: {
+                        // tagData [packed=false]
+                        tag = input.readRepeatedDouble(tagData, tag);
+                        bitField0_ |= 0x00000001;
+                        break;
+                    }
+                }
+            }
+        }
+
+        @Override
+        public void writeTo(final JsonSink output) throws IOException {
+            output.beginObject();
+            if ((bitField0_ & 0x00000001) != 0) {
+                output.writeRepeatedDouble(FieldNames.tagData, tagData);
+            }
+            output.endObject();
+        }
+
+        @Override
+        public ProtobufQuestNavTagData mergeFrom(final JsonSource input) throws IOException {
+            if (!input.beginObject()) {
+                return this;
+            }
+            while (!input.isAtEnd()) {
+                switch (input.readFieldHash()) {
+                    case -1549482396:
+                    case -764307153: {
+                        if (input.isAtField(FieldNames.tagData)) {
+                            if (!input.trySkipNullValue()) {
+                                input.readRepeatedDouble(tagData);
+                                bitField0_ |= 0x00000001;
+                            }
+                        } else {
+                            input.skipUnknownField();
+                        }
+                        break;
+                    }
+                    default: {
+                        input.skipUnknownField();
+                        break;
+                    }
+                }
+            }
+            input.endObject();
+            return this;
+        }
+
+        @Override
+        public ProtobufQuestNavTagData clone() {
+            return new ProtobufQuestNavTagData().copyFrom(this);
+        }
+
+        @Override
+        public boolean isEmpty() {
+            return ((bitField0_) == 0);
+        }
+
+        public static ProtobufQuestNavTagData parseFrom(final byte[] data) throws
+                InvalidProtocolBufferException {
+            return ProtoMessage.mergeFrom(new ProtobufQuestNavTagData(), data).checkInitialized();
+        }
+
+        public static ProtobufQuestNavTagData parseFrom(final ProtoSource input) throws
+                IOException {
+            return ProtoMessage.mergeFrom(new ProtobufQuestNavTagData(), input).checkInitialized();
+        }
+
+        public static ProtobufQuestNavTagData parseFrom(final JsonSource input) throws IOException {
+            return ProtoMessage.mergeFrom(new ProtobufQuestNavTagData(), input).checkInitialized();
+        }
+
+        /**
+         * @return factory for creating ProtobufQuestNavTagData messages
+         */
+        public static MessageFactory<ProtobufQuestNavTagData> getFactory() {
+            return ProtobufQuestNavTagDataFactory.INSTANCE;
+        }
+
+        /**
+         * @return this type's descriptor.
+         */
+        public static Descriptors.Descriptor getDescriptor() {
+            return Data.questnav_protos_data_ProtobufQuestNavTagData_descriptor;
+        }
+
+        private enum ProtobufQuestNavTagDataFactory implements MessageFactory<ProtobufQuestNavTagData> {
+            INSTANCE;
+
+            @Override
+            public ProtobufQuestNavTagData create() {
+                return ProtobufQuestNavTagData.newInstance();
+            }
+        }
+
+        /**
+         * Contains name constants used for serializing JSON
+         */
+        static class FieldNames {
+            static final FieldName tagData = FieldName.forField("tagData", "tag_data");
         }
     }
 }
