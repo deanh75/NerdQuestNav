@@ -8,16 +8,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using QuestNav.AprilTag;
 using static TagDrawerExt.TagDrawerExt;
-using static AprilTag.AprilTagManager;
 
 namespace AprilTag
 {
-    public interface IAprilTagManager
-    {
-        PoseData AprilTagPose();
-    }
-    
-    public class AprilTagManager : MonoBehaviour, IAprilTagManager
+    public class AprilTagManager : MonoBehaviour
     {
         // Create a field to attach the reference to the WebCamTextureManager prefab
         [SerializeField] private WebCamTextureManager m_webCamTextureManager;

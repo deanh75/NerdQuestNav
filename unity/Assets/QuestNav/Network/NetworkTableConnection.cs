@@ -75,6 +75,7 @@ public class NetworkTableConnection : INetworkTableConnection
 
     // Publisher topics
     private ProtobufPublisher<ProtobufQuestNavFrameData> frameDataPublisher;
+    private ProtobufPublisher<ProtobufQuestNavTagData> tagDataPublisher;
     private ProtobufPublisher<ProtobufQuestNavDeviceData> deviceDataPublisher;
     private ProtobufPublisher<ProtobufQuestNavCommandResponse> commandResponsePublisher;
 
@@ -169,6 +170,7 @@ public class NetworkTableConnection : INetworkTableConnection
     #region Data Publishing Methods
 
     private readonly ProtobufQuestNavFrameData frameData = new();
+    private readonly ProtobufQuestNavTagData tag_Data = new();
 
     /// <summary>
     /// Publishes current frame data to NetworkTables
@@ -196,15 +198,17 @@ public class NetworkTableConnection : INetworkTableConnection
         double timeStamp,
         Vector3 position,
         Quaternion rotation,
-        double[] tagData
+        double[] TagData
     )
     {
         frameData.FrameCount = frameCount;
         frameData.Timestamp = timeStamp;
         frameData.Pose2D = Conversions.UnityToFrc(position, rotation);
+        tag_Data.TagData.Add(TagData);
 
         // Publish data
         frameDataPublisher.Set(frameData);
+        tagDataPublisher.Set(tag_Data);
     }
 
     private readonly ProtobufQuestNavDeviceData deviceData = new();

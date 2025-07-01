@@ -30,3 +30,9 @@ message ProtobufQuestNavDeviceData {
   // The battery percentage of the Quest
   int32 battery_percent = 3;
 }
+
+// Tag Data that is sent every loop
+message ProtobufQuestNavTagData {
+  // The tag data from the quest
+  repeated double tag_data = 1 [packed=true];
+}

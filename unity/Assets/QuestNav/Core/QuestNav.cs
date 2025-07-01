@@ -137,7 +137,12 @@ namespace QuestNav.Core
         /// <summary>
         /// Reference to the apriltag manager component
         /// </summary>
-        private AprilTagManager apriltagManager;
+        public AprilTagManager apriltagManagerLeft;
+
+        /// <summary>
+        /// Reference to the apriltag manager component
+        /// </summary>
+        //public AprilTagManager apriltagManagerRight;
         #endregion
         #endregion
 
@@ -162,7 +167,6 @@ namespace QuestNav.Core
                 conStateText,
                 teamUpdateButton
             );
-            apriltagManager = gameObject.AddComponent<AprilTagManager>();
 
             // Set Oculus display frequency
             OVRPlugin.systemDisplayFrequency = QuestNavConstants.Display.DISPLAY_FREQUENCY;
@@ -177,7 +181,7 @@ namespace QuestNav.Core
         private void MainUpdate()
         {
             // Collect Tag Data
-            tagData = apriltagManager.AprilTagPose();
+            tagData = apriltagManagerLeft.AprilTagPose();
             
             // Collect and publish current frame data
             UpdateFrameData();
