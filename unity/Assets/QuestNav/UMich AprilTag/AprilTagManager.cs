@@ -8,10 +8,16 @@ using UnityEngine;
 using UnityEngine.UI;
 using QuestNav.AprilTag;
 using static TagDrawerExt.TagDrawerExt;
+using static AprilTag.AprilTagManager;
 
 namespace AprilTag
 {
-    public class AprilTagManager : MonoBehaviour
+    public interface IAprilTagManager
+    {
+        PoseData AprilTagPose();
+    }
+    
+    public class AprilTagManager : MonoBehaviour, IAprilTagManager
     {
         // Create a field to attach the reference to the WebCamTextureManager prefab
         [SerializeField] private WebCamTextureManager m_webCamTextureManager;
@@ -27,7 +33,7 @@ namespace AprilTag
 
         private IEnumerator Start()
         {
-            while (m_webCamTextureManager.WebCamTexture == null)
+            while (m_webCamTextureManager == null ||  m_webCamTextureManager.WebCamTexture == null)
             {
                 yield return null;
             }
@@ -43,11 +49,6 @@ namespace AprilTag
             m_cy = intrinsics.PrincipalPoint.y;
 
             m_drawer = new(tagMaterial);
-        }
-
-        private void Update()
-        {
-            AprilTagPose();
         }
 
         public PoseData AprilTagPose()

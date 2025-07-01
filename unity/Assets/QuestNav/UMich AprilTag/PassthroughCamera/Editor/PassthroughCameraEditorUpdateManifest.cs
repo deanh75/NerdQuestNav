@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace PassthroughCameraSamples.Editor
 {
-    [MetaCodeSample("PassthroughCameraApiSamples-PassthroughCamera")]
+    //[MetaCodeSample("PassthroughCameraApiSamples-PassthroughCamera")]
     public class PassthroughCameraEditorUpdateManifest : IPreprocessBuildWithReport
     {
         public int callbackOrder => 0;

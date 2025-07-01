@@ -16,7 +16,7 @@ namespace PassthroughCameraSamples
     /// PLEASE NOTE: Unity doesn't support requesting multiple permissions at the same time with <see cref="Permission.RequestUserPermissions"/> on Android.
     /// This component is a sample and shouldn't be used simultaneously with other scripts that manage Android permissions.
     /// </summary>
-    [MetaCodeSample("PassthroughCameraApiSamples-PassthroughCamera")]
+    //[MetaCodeSample("PassthroughCameraApiSamples-PassthroughCamera")]
     public class PassthroughCameraPermissions : MonoBehaviour
     {
         [SerializeField] public List<string> PermissionRequestsOnStartup = new() { OVRPermissionsRequester.ScenePermission };

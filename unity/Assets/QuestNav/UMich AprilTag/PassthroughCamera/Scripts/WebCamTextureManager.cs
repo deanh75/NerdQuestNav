@@ -9,7 +9,7 @@ using PCD = PassthroughCameraSamples.PassthroughCameraDebugger;
 
 namespace PassthroughCameraSamples
 {
-    [MetaCodeSample("PassthroughCameraApiSamples-PassthroughCamera")]
+    //[MetaCodeSample("PassthroughCameraApiSamples-PassthroughCamera")]
     public class WebCamTextureManager : MonoBehaviour
     {
         [SerializeField] public PassthroughCameraEye Eye = PassthroughCameraEye.Left;

@@ -1,10 +1,13 @@
-﻿using QuestNav.Commands;
+﻿using AprilTag;
+using ATE;
+using QuestNav.Commands;
 using QuestNav.Network;
 using QuestNav.UI;
 using QuestNav.Utils;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static AprilTag.AprilTagManager;
 
 namespace QuestNav.Core
 {
@@ -92,7 +95,7 @@ namespace QuestNav.Core
         /// <summary>
         /// Counter for display update delay
         /// </summary>
-        private int delayCounter;
+        private readonly int delayCounter;
 
         /// <summary>
         /// Increments once every time tracking is lost after having it acquired
@@ -108,6 +111,11 @@ namespace QuestNav.Core
         /// Whether we had tracking
         /// </summary>
         private bool hadTracking;
+
+        ///<summary>
+        /// Tag Pose Data
+        /// </summary>
+        private PoseData tagData;
 
         #region Component References
 
@@ -125,6 +133,11 @@ namespace QuestNav.Core
         /// Reference to the UI manager component
         /// </summary>
         private UIManager uiManager;
+
+        /// <summary>
+        /// Reference to the apriltag manager component
+        /// </summary>
+        private AprilTagManager apriltagManager;
         #endregion
         #endregion
 
@@ -149,6 +162,7 @@ namespace QuestNav.Core
                 conStateText,
                 teamUpdateButton
             );
+            apriltagManager = gameObject.AddComponent<AprilTagManager>();
 
             // Set Oculus display frequency
             OVRPlugin.systemDisplayFrequency = QuestNavConstants.Display.DISPLAY_FREQUENCY;
@@ -162,9 +176,12 @@ namespace QuestNav.Core
         /// </summary>
         private void MainUpdate()
         {
+            // Collect Tag Data
+            tagData = apriltagManager.AprilTagPose();
+            
             // Collect and publish current frame data
             UpdateFrameData();
-            networkTableConnection.PublishFrameData(frameCount, timeStamp, position, rotation);
+            networkTableConnection.PublishFrameData(frameCount, timeStamp, position, rotation, tagData.ToDoubleArray());
 
             // Process robot commands
             commandProcessor.ProcessCommands();

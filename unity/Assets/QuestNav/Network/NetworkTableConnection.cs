@@ -188,6 +188,25 @@ public class NetworkTableConnection : INetworkTableConnection
         frameDataPublisher.Set(frameData);
     }
 
+    /// <summary>
+    /// Publishes current frame data to NetworkTables with Tag Data
+    /// </summary>
+    public void PublishFrameData(
+        int frameCount,
+        double timeStamp,
+        Vector3 position,
+        Quaternion rotation,
+        double[] tagData
+    )
+    {
+        frameData.FrameCount = frameCount;
+        frameData.Timestamp = timeStamp;
+        frameData.Pose2D = Conversions.UnityToFrc(position, rotation);
+
+        // Publish data
+        frameDataPublisher.Set(frameData);
+    }
+
     private readonly ProtobufQuestNavDeviceData deviceData = new();
 
     /// <summary>

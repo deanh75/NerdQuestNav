@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace PassthroughCameraSamples
 {
-    [MetaCodeSample("PassthroughCameraApiSamples-PassthroughCamera")]
+    //[MetaCodeSample("PassthroughCameraApiSamples-PassthroughCamera")]
     public static class PassthroughCameraDebugger
     {
         public enum DebuglevelEnum

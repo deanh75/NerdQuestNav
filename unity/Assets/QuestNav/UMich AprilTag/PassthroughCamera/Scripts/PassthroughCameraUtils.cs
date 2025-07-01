@@ -9,7 +9,7 @@ using UnityEngine.Assertions;
 
 namespace PassthroughCameraSamples
 {
-    [MetaCodeSample("PassthroughCameraApiSamples-PassthroughCamera")]
+    //[MetaCodeSample("PassthroughCameraApiSamples-PassthroughCamera")]
     public static class PassthroughCameraUtils
     {
         // The Horizon OS starts supporting PCA with v74.

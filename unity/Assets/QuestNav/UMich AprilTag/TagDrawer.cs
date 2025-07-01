@@ -28,20 +28,20 @@ namespace QuestNav.AprilTag
 
         static Mesh BuildMesh()
         {
-            var vtx = new Vector3 [] { new Vector3(-0.5f, -0.5f, 0),
-                new Vector3(+0.5f, -0.5f, 0),
-                new Vector3(+0.5f, +0.5f, 0),
-                new Vector3(-0.5f, +0.5f, 0),
-                new Vector3(-0.5f, -0.5f, -1),
-                new Vector3(+0.5f, -0.5f, -1),
-                new Vector3(+0.5f, +0.5f, -1),
-                new Vector3(-0.5f, +0.5f, -1),
-                new Vector3(-0.2f, 0, 0),
-                new Vector3(+0.2f, 0, 0),
-                new Vector3(0, -0.2f, 0),
-                new Vector3(0, +0.2f, 0),
-                new Vector3(0, 0, 0),
-                new Vector3(0, 0, -1.5f) };
+            var vtx = new Vector3 [] { new(-0.5f, -0.5f, 0),
+                new(+0.5f, -0.5f, 0),
+                new(+0.5f, +0.5f, 0),
+                new(-0.5f, +0.5f, 0),
+                new(-0.5f, -0.5f, -1),
+                new(+0.5f, -0.5f, -1),
+                new(+0.5f, +0.5f, -1),
+                new(-0.5f, +0.5f, -1),
+                new(-0.2f, 0, 0),
+                new(+0.2f, 0, 0),
+                new(0, -0.2f, 0),
+                new(0, +0.2f, 0),
+                new(0, 0, 0),
+                new(0, 0, -1.5f) };
 
             var idx = new int [] { 0, 1, 1, 2, 2, 3, 3, 0,
                 4, 5, 5, 6, 6, 7, 7, 4,
