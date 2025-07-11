@@ -104,6 +104,11 @@ public class NetworkTableConnection : INetworkTableConnection
             "questnav.protos.data.ProtobufQuestNavFrameData",
             QuestNavConstants.Network.NT_PUBLISHER_SETTINGS
         );
+        tagDataPublisher = ntInstance.GetProtobufPublisher<ProtobufQuestNavTagData>(
+            QuestNavConstants.Topics.TAG_DATA,
+            "questnav.protos.data.ProtobufQuestNavTagData",
+            QuestNavConstants.Network.NT_PUBLISHER_SETTINGS
+        );
         deviceDataPublisher = ntInstance.GetProtobufPublisher<ProtobufQuestNavDeviceData>(
             QuestNavConstants.Topics.DEVICE_DATA,
             "questnav.protos.data.ProtobufQuestNavDeviceData",

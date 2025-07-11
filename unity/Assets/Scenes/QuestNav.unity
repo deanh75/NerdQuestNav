@@ -691,7 +691,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_webCamTextureManager: {fileID: 1781184259}
-  m_debugText: {fileID: 1375737370}
+  m_debugText: {fileID: 773190231}
   tagMaterial: {fileID: 2100000, guid: 86bc33dac79b6d04ebf10a25359d3940, type: 2}
 --- !u!4 &370722119
 Transform:

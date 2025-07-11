@@ -87,7 +87,7 @@ namespace QuestNav.UI
 
             teamNumber = PlayerPrefs.GetInt(
                 "TeamNumber",
-                QuestNavConstants.Network.DEFAULT_TEAM_NUMBER
+                QuestNavConstants.Network.DEFAULT_TEAM_NUMBER_DEV
             );
             teamInput.text = teamNumber.ToString();
             setTeamNumberFromUI();

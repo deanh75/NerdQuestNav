@@ -8,6 +8,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using QuestNav.AprilTag;
 using static TagDrawerExt.TagDrawerExt;
+using System;
+using UnityEngine.Windows.WebCam;
 
 namespace AprilTag
 {
@@ -17,13 +19,12 @@ namespace AprilTag
         [SerializeField] private WebCamTextureManager m_webCamTextureManager;
         [SerializeField] private TMP_Text m_debugText;
         [SerializeField] Material tagMaterial;
-        private readonly RawImage m_image;
-        private string m_pnmpath;
         private float m_fx;
         private float m_fy;
         private float m_cx;
         private float m_cy;
         private TagDrawer m_drawer;
+        private PoseData pose;
 
         private IEnumerator Start()
         {
@@ -31,12 +32,9 @@ namespace AprilTag
             {
                 yield return null;
             }
-            m_debugText.text += "\nWebCamTexture Object ready and playing.";
-            // Set WebCamTexture GPU texture to the RawImage Ui element
-            m_image.texture = m_webCamTextureManager.WebCamTexture;
+            m_debugText.text = "\nWebCamTexture Object ready and playing.";
 
             PassthroughCameraIntrinsics intrinsics = new();
-
             m_fx = intrinsics.FocalLength.x;
             m_fy = intrinsics.FocalLength.y;
             m_cx = intrinsics.PrincipalPoint.x;
@@ -45,70 +43,39 @@ namespace AprilTag
             m_drawer = new(tagMaterial);
         }
 
+        private void OnDestroy()
+        {
+            destroy_detector();
+        }
+
         public PoseData AprilTagPose()
         {
-            m_debugText.text = PassthroughCameraPermissions.HasCameraPermission == true ? "Permission granted." : "No permission granted.";
+            GCHandle handle = GCHandle.Alloc(m_webCamTextureManager.WebCamTexture.GetPixels32(), GCHandleType.Pinned);
 
-            m_pnmpath = SaveTextureAsPNM(m_image);
-
-            PoseData pose = detect_and_estimate_pose(m_pnmpath, m_fx, m_fy, m_cx, m_cy);
+            try {
+                IntPtr ptr = handle.AddrOfPinnedObject();  // Get pointer to Color32[]
+                pose = detect_and_estimate_pose(ptr, m_webCamTextureManager.WebCamTexture.width, m_webCamTextureManager.WebCamTexture.height, 
+                    m_fx, m_fy, m_cx, m_cy);
+            } finally {
+                handle.Free();  // Always unpin
+            }
 
             m_drawer.Draw(pose.ToVector(), pose.ToQuaternion(), 0.05f);
             return pose;
         }
 
-        private string SaveTextureAsPNM(RawImage rawImage)
-        {
-            // Get Texture2D from RawImage
-            Texture2D texture = rawImage.texture as Texture2D;
-            if (texture == null)
-            {
-                m_debugText.text = "RawImage does not have a valid Texture2D!";
-                return null;
-            }
-
-            // Get pixel data
-            Color32[] pixels = texture.GetPixels32();
-            int width = texture.width;
-            int height = texture.height;
-
-            // P6 PNM header (Binary RGB format)
-            StringBuilder header = new();
-            header.AppendLine("P6");  // Magic number for binary RGB PNM
-            header.AppendLine($"{width} {height}"); // Image dimensions
-            header.AppendLine("255"); // Max color value
-
-            // Convert pixel data to raw binary RGB
-            byte[] pixelBytes = new byte[width * height * 3];  // RGB format
-            for (int i = 0; i < pixels.Length; i++)
-            {
-                pixelBytes[i * 3] = pixels[i].r;
-                pixelBytes[i * 3 + 1] = pixels[i].g;
-                pixelBytes[i * 3 + 2] = pixels[i].b;
-            }
-
-            // Save to file
-            string path = Path.Combine(Application.persistentDataPath, "image.pnm");
-            using (FileStream fileStream = new(path, FileMode.Create))
-            {
-                byte[] headerBytes = Encoding.ASCII.GetBytes(header.ToString());
-                fileStream.Write(headerBytes, 0, headerBytes.Length);
-                fileStream.Write(pixelBytes, 0, pixelBytes.Length);
-            }
-
-            m_debugText.text = "PNM image saved at: " + path;
-
-            return path;
-        }
-
         [StructLayout(LayoutKind.Sequential)]
         public struct PoseData
         {
-            public double tx, ty, tz;
-            public double r1, r2, r3, r4, r5, r6, r7, r8, r9;
+            public double tx, ty, tz; // Translation in meters
+            public double r1, r2, r3, r4, r5, r6, r7, r8, r9; // Rotation matrix as 3x3 flattened
+            public double error; // Error in pose estimation
         };
 
         [DllImport("apriltag_wrapper.dll", CallingConvention = CallingConvention.Cdecl)]
-        private static extern PoseData detect_and_estimate_pose(string image_path, double fx, double fy, double cx, double cy);
+        private static extern PoseData detect_and_estimate_pose(IntPtr rgba_data, int width, int height, double fx, double fy, double cx, double cy);
+
+        [DllImport("apriltag_wrapper.dll", CallingConvention = CallingConvention.Cdecl)]
+        private static extern void destroy_detector();
     }
 }

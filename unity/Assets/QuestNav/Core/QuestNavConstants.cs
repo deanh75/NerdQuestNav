@@ -29,6 +29,11 @@ namespace QuestNav.Core
             /// Default team number when none is provided
             /// </summary>
             public const int DEFAULT_TEAM_NUMBER = 9999;
+
+            /// <summary>
+            /// Default team number when none is provided (for dev)
+            /// </summary>
+            public const int DEFAULT_TEAM_NUMBER_DEV = 9312;
         }
 
         /// <summary>
@@ -55,6 +60,11 @@ namespace QuestNav.Core
             /// Frame data topic
             /// </summary>
             public const string FRAME_DATA = NT_BASE_PATH + "/frameData";
+
+            /// <summary>
+            /// Tag data topic
+            /// </summary>
+            public const string TAG_DATA = NT_BASE_PATH + "/tagData";
 
             /// <summary>
             /// Device data topic
