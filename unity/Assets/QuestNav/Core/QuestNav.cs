@@ -182,7 +182,7 @@ namespace QuestNav.Core
         {
             // Collect Tag Data
             tagData = apriltagManagerLeft.AprilTagPose();
-            
+
             // Collect and publish current frame data
             UpdateFrameData();
             networkTableConnection.PublishFrameData(frameCount, timeStamp, position, rotation, tagData.ToDoubleArray());

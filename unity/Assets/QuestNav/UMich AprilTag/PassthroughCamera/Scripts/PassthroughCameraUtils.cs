@@ -24,8 +24,10 @@ namespace PassthroughCameraSamples
         private static int? s_horizonOsVersion;
 
         // Caches
-        internal static readonly Dictionary<PassthroughCameraEye, (string id, int index)> CameraEyeToCameraIdMap = new();
-        private static readonly ConcurrentDictionary<PassthroughCameraEye, List<Vector2Int>> s_cameraOutputSizes = new();
+        internal static readonly Dictionary<
+            PassthroughCameraEye, (string id, int index)> CameraEyeToCameraIdMap = new();
+        private static readonly ConcurrentDictionary<
+            PassthroughCameraEye, List<Vector2Int>> s_cameraOutputSizes = new();
         private static readonly ConcurrentDictionary<string, AndroidJavaObject> s_cameraCharacteristicsMap = new();
         private static readonly OVRPose?[] s_cachedCameraPosesRelativeToHead = new OVRPose?[2];
 

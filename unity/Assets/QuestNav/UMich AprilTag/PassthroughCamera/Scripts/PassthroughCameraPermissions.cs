@@ -19,7 +19,8 @@ namespace PassthroughCameraSamples
     //[MetaCodeSample("PassthroughCameraApiSamples-PassthroughCamera")]
     public class PassthroughCameraPermissions : MonoBehaviour
     {
-        [SerializeField] public List<string> PermissionRequestsOnStartup = new() { OVRPermissionsRequester.ScenePermission };
+        [SerializeField]
+        public List<string> PermissionRequestsOnStartup = new() { OVRPermissionsRequester.ScenePermission };
 
         public static readonly string[] CameraPermissions =
         {

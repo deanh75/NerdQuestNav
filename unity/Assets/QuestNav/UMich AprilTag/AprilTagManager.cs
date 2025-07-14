@@ -1,15 +1,12 @@
+using System;
 using PassthroughCameraSamples;
 using System.Collections;
-using System.IO;
 using System.Runtime.InteropServices;
-using System.Text;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using QuestNav.AprilTag;
 using static TagDrawerExt.TagDrawerExt;
-using System;
-using UnityEngine.Windows.WebCam;
+using ATE;
 
 namespace AprilTag
 {
@@ -60,6 +57,8 @@ namespace AprilTag
                 handle.Free();  // Always unpin
             }
 
+            m_debugText.text = pose.toString();
+
             m_drawer.Draw(pose.ToVector(), pose.ToQuaternion(), 0.05f);
             return pose;
         }
@@ -72,10 +71,10 @@ namespace AprilTag
             public double error; // Error in pose estimation
         };
 
-        [DllImport("apriltag_wrapper.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("apriltag_wrapper", CallingConvention = CallingConvention.Cdecl)]
         private static extern PoseData detect_and_estimate_pose(IntPtr rgba_data, int width, int height, double fx, double fy, double cx, double cy);
 
-        [DllImport("apriltag_wrapper.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("apriltag_wrapper", CallingConvention = CallingConvention.Cdecl)]
         private static extern void destroy_detector();
     }
 }

@@ -12,11 +12,13 @@ namespace PassthroughCameraSamples
     //[MetaCodeSample("PassthroughCameraApiSamples-PassthroughCamera")]
     public class WebCamTextureManager : MonoBehaviour
     {
-        [SerializeField] public PassthroughCameraEye Eye = PassthroughCameraEye.Left;
+        [SerializeField]
+        public PassthroughCameraEye Eye = PassthroughCameraEye.Left;
         [SerializeField, Tooltip("The requested resolution of the camera may not be supported by the chosen camera. In such cases, the closest available values will be used.\n\n" +
                                  "When set to (0,0), the highest supported resolution will be used.")]
         public Vector2Int RequestedResolution;
-        [SerializeField] public PassthroughCameraPermissions CameraPermissions;
+        [SerializeField]
+        public PassthroughCameraPermissions CameraPermissions;
 
         /// <summary>
         /// Returns <see cref="WebCamTexture"/> reference if required permissions were granted and this component is enabled. Else, returns null.
