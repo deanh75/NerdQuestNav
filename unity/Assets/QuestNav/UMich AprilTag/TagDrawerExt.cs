@@ -1,5 +1,5 @@
-using UnityEngine;
 using System;
+using UnityEngine;
 using static AprilTag.AprilTagManager;
 
 namespace TagDrawerExt
@@ -8,13 +8,21 @@ namespace TagDrawerExt
     {
         public static Vector3 ToVector(this PoseData pose)
         {
-            return new Vector3 { x = (float)pose.tx, y = (float)pose.ty, z = (float)pose.tz };
+            return new Vector3
+            {
+                x = (float)pose.tx,
+                y = (float)pose.ty,
+                z = (float)pose.tz,
+            };
         }
 
         public static Quaternion ToQuaternion(this PoseData pose)
         {
             double trace = pose.r1 + pose.r5 + pose.r9; // [0][0] + [1][1] + [2][2]
-            double w, x, y, z;
+            double w,
+                x,
+                y,
+                z;
 
             if (trace > 0)
             {
@@ -52,7 +60,13 @@ namespace TagDrawerExt
                 }
             }
 
-            return new Quaternion { w = (float)w, x = (float)x, y = (float)y, z = (float)z };
+            return new Quaternion
+            {
+                w = (float)w,
+                x = (float)x,
+                y = (float)y,
+                z = (float)z,
+            };
         }
     }
 }

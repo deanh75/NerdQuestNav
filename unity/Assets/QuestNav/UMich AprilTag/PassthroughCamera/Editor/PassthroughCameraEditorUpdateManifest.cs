@@ -14,7 +14,7 @@ namespace PassthroughCameraSamples.Editor
     public class PassthroughCameraEditorUpdateManifest : IPreprocessBuildWithReport
     {
         public int callbackOrder => 0;
-        
+
         public void OnPreprocessBuild(BuildReport report)
         {
             UpdateAndroidManifest();
@@ -34,7 +34,9 @@ namespace PassthroughCameraSamples.Editor
                 var element = (XmlElement)doc.SelectSingleNode("/manifest");
                 if (element == null)
                 {
-                    throw new OperationCanceledException("Could not find manifest tag in android manifest.");
+                    throw new OperationCanceledException(
+                        "Could not find manifest tag in android manifest."
+                    );
                 }
 
                 // Get android namespace URI from the manifest
@@ -48,30 +50,49 @@ namespace PassthroughCameraSamples.Editor
                         var attr = e.GetAttribute("name", androidNamepsaceURI);
                         if (attr == pcaManifestPermission)
                         {
-                            Debug.Log("PCA Editor: Android manifest already has the proper permissions.");
+                            Debug.Log(
+                                "PCA Editor: Android manifest already has the proper permissions."
+                            );
                             return;
                         }
                     }
 
-                    if (EditorUtility.DisplayDialog("Meta Passthrough Camera Access", "\"horizonos.permission.HEADSET_CAMERA\" permission IS NOT PRESENT in AndroidManifest.xml", "Add it", "Do Not Add it"))
+                    if (
+                        EditorUtility.DisplayDialog(
+                            "Meta Passthrough Camera Access",
+                            "\"horizonos.permission.HEADSET_CAMERA\" permission IS NOT PRESENT in AndroidManifest.xml",
+                            "Add it",
+                            "Do Not Add it"
+                        )
+                    )
                     {
                         element = (XmlElement)doc.SelectSingleNode("/manifest");
                         if (element != null)
                         {
                             // Insert Passthrough Camera Access permission
                             var newElement = doc.CreateElement("uses-permission");
-                            _ = newElement.SetAttribute("name", androidNamepsaceURI, pcaManifestPermission);
+                            _ = newElement.SetAttribute(
+                                "name",
+                                androidNamepsaceURI,
+                                pcaManifestPermission
+                            );
                             _ = element.AppendChild(newElement);
 
                             doc.Save(manifestFolder + "/AndroidManifest.xml");
-                            Debug.Log("PCA Editor: Successfully modified android manifest with Passthrough Camera Access permission.");
+                            Debug.Log(
+                                "PCA Editor: Successfully modified android manifest with Passthrough Camera Access permission."
+                            );
                             return;
                         }
-                        throw new OperationCanceledException("Could not find android namespace URI in android manifest.");
+                        throw new OperationCanceledException(
+                            "Could not find android namespace URI in android manifest."
+                        );
                     }
                     else
                     {
-                        throw new OperationCanceledException("To use the Passthrough Camera Access Api you need to add the \"horizonos.permission.HEADSET_CAMERA\" permission in your AndroidManifest.xml.");
+                        throw new OperationCanceledException(
+                            "To use the Passthrough Camera Access Api you need to add the \"horizonos.permission.HEADSET_CAMERA\" permission in your AndroidManifest.xml."
+                        );
                     }
                 }
             }

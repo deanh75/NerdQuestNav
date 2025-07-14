@@ -14,7 +14,7 @@ namespace PassthroughCameraSamples
             NONE,
             ONLY_ERROR,
             ONLY_LOG,
-            ONLY_WARNING
+            ONLY_WARNING,
         }
 
         public static DebuglevelEnum DebugLevel = DebuglevelEnum.ALL;

@@ -185,7 +185,13 @@ namespace QuestNav.Core
 
             // Collect and publish current frame data
             UpdateFrameData();
-            networkTableConnection.PublishFrameData(frameCount, timeStamp, position, rotation, tagData.ToDoubleArray());
+            networkTableConnection.PublishFrameData(
+                frameCount,
+                timeStamp,
+                position,
+                rotation,
+                tagData.ToDoubleArray()
+            );
 
             // Process robot commands
             commandProcessor.ProcessCommands();
