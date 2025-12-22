@@ -237,7 +237,7 @@ namespace QuestNav.Core
             /// <summary>
             /// Distance threshold for UI movement along the World X-axis (sideways).
             /// </summary>
-            public const float POSITION_THRESHOLD_X = 0.5f;
+            public const float POSITION_THRESHOLD_X = 0.4f;
 
             /// <summary>
             /// Distance threshold for UI movement along the World Y-axis (up/down).

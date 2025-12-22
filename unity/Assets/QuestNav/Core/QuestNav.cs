@@ -7,6 +7,7 @@ using QuestNav.Network;
 using QuestNav.UI;
 using QuestNav.Utils;
 using QuestNav.WebServer;
+using QuestNavAprilTag;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -70,6 +71,12 @@ namespace QuestNav.Core
         /// </summary>
         [SerializeField]
         private TMP_Text conStateText;
+
+        /// <summary>
+        /// AtState text
+        /// </summary>
+        [SerializeField]
+        private TMP_Text atStateText;
 
         /// <summary>
         /// posXText text
@@ -213,6 +220,11 @@ namespace QuestNav.Core
         /// </summary>
         private PassthroughFrameSource passthroughFrameSource;
 
+        /// <summary>
+        /// Refernce to AprilTag manager
+        /// </summary>
+        private AprilTag aprilTag;
+
         #endregion
 
         #endregion
@@ -273,6 +285,8 @@ namespace QuestNav.Core
             );
             tagAlongUI = new TagAlongUI(vrCamera, tagalongUiTransform);
 
+            aprilTag = new AprilTag(cameraAccess, passthroughFrameSource, atStateText);
+
             // Use try-catch due to async
             try
             {
@@ -331,6 +345,8 @@ namespace QuestNav.Core
 
             // Update the UI position to keep it in view of the user
             tagAlongUI.Periodic();
+
+            aprilTag.Periodic();
         }
 
         /// <summary>
@@ -384,6 +400,7 @@ namespace QuestNav.Core
         {
             configManager.CloseAsync();
             webServerManager?.Shutdown();
+            aprilTag.Shutdown();
         }
 
         /// <summary>

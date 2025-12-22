@@ -52,17 +52,34 @@ namespace QuestNav.UI
             bool needsPositionUpdate =
                 Mathf.Abs(delta.x) > POSITION_THRESHOLD_X
                 || Mathf.Abs(delta.y) > POSITION_THRESHOLD_Y;
+            float thresholdBlend = needsPositionUpdate ? 1f : 0.2f;
+
 
             if (needsPositionUpdate)
             {
                 // Move towards the ideal position
+                //transform.position = Vector3.Lerp(
+                //    transform.position,
+                //    idealPosition,
+                //    Time.deltaTime * POSITION_SPEED
+                //);
+                float posT = 1f - Mathf.Exp(-POSITION_SPEED * thresholdBlend * Time.deltaTime);
+
                 transform.position = Vector3.Lerp(
                     transform.position,
                     idealPosition,
-                    Time.deltaTime * POSITION_SPEED
+                    posT
                 );
+
                 // The angle is too large, so we rotate the UI to bring it back into the FOV.
-                transform.rotation = idealRotation;
+                //transform.rotation = idealRotation;
+                float rotT = 1f - Mathf.Exp(-ROTATION_SPEED * Time.deltaTime);
+
+                transform.rotation = Quaternion.Slerp(
+                    transform.rotation,
+                    idealRotation,
+                    rotT
+                );
             }
             else
             {
@@ -73,10 +90,17 @@ namespace QuestNav.UI
                 if (angle > ANGLE_THRESHOLD)
                 {
                     // The angle is too large, so we rotate the UI to bring it back into the FOV.
+                    //transform.rotation = Quaternion.Slerp(
+                    //    transform.rotation,
+                    //    idealRotation,
+                    //    Time.deltaTime * ROTATION_SPEED
+                    //);
+                    float rotT = 1f - Mathf.Exp(-ROTATION_SPEED * Time.deltaTime);
+
                     transform.rotation = Quaternion.Slerp(
                         transform.rotation,
                         idealRotation,
-                        Time.deltaTime * ROTATION_SPEED
+                        rotT
                     );
                 }
             }
